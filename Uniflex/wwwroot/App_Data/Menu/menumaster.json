@@ -1,0 +1,33 @@
+[
+  
+  {
+    "id": 0,
+    "Nama": "General Table",
+    "Kode": "gTbl",
+    "Img": "nav-icon fas fa-table",
+    "Created": "0001-01-01T00:00:00",
+    "Update": "0001-01-01T00:00:00",
+    "Role": "rDev",
+    "Active": true
+  },
+  {
+    "id": 1,
+    "Nama": "Document Api",
+    "Kode": "mDA",
+    "Img": "nav-icon fas fa-globe",
+    "Created": "2022-07-28T16:07:02.6107079+07:00",
+    "Update": "2022-07-28T16:07:02.6107092+07:00",
+    "Role": "rDev#rAdmin#rUser",
+    "Active": true
+  },
+  {
+    "id": 2,
+    "Nama": "Maintenance",
+    "Kode": "mMT",
+    "Img": "nav-icon fas fa-columns",
+    "Created": "2022-07-28T16:07:02.6107095+07:00",
+    "Update": "2022-07-28T16:07:02.6107096+07:00",
+    "Role": "rDev",
+    "Active": true
+  }
+]

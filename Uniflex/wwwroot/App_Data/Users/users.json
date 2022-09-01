@@ -1,0 +1,68 @@
+[  
+  {
+    "Id": 4,
+    "UserId": "fajar",
+    "UserName": "fajar",
+    "UserPass": "rv5S5HK/yuKSjopObLczDRfWZv8WU/q6CpNSrssG8suiBHR2KfsRf4sCjqsM5Use5fG7czAsQ9JbWoF1GIGScDJEtWYtKQN0r9/jisU7S/sH3VyxBbCe03pqdSzhCEL6",
+    "UserRolesId": "rUser",
+    "Active": true,
+    "UserCreated": "2022-07-28T15:41:50",
+    "UserUpdated": "2022-08-15T14:31:56",
+    "Token": "575c8ae3-0345a34"
+  },
+  {
+    "Id": 1,
+    "UserId": "dev",
+    "UserName": "dev",
+    "UserPass": "Gj2sZs5bEAZM9CgavuZ6Es8JhbZFt+T+x/AYR7sVkEEtNYGpl4lHgPX779MeWCOZYRTYE3GiSpF39CR0GIG64A==",
+    "UserRolesId": "rDev",
+    "Active": true,
+    "UserCreated": "2022-07-28T15:41:50.3269567+07:00",
+    "UserUpdated": "2022-07-28T15:41:50.3272201+07:00",
+    "Token": "575c8ae3-0345a31"
+  },
+  {
+    "Id": 2,
+    "UserId": "ferdi",
+    "UserName": "ferdi",
+    "UserPass": "Gj2sZs5bEAZM9CgavuZ6Es8JhbZFt+T+x/AYR7sVkEEtNYGpl4lHgPX779MeWCOZYRTYE3GiSpF39CR0GIG64A==",
+    "UserRolesId": "rUser",
+    "Active": true,
+    "UserCreated": "2022-07-28T15:41:50.3276055+07:00",
+    "UserUpdated": "2022-07-28T15:41:50.3276063+07:00",
+    "Token": "575c8ae3-0345a32"
+  },
+  {
+    "Id": 3,
+    "UserId": "frans",
+    "UserName": "frans",
+    "UserPass": "Gj2sZs5bEAZM9CgavuZ6Es8JhbZFt+T+x/AYR7sVkEEtNYGpl4lHgPX779MeWCOZYRTYE3GiSpF39CR0GIG64A==",
+    "UserRolesId": "rUser",
+    "Active": true,
+    "UserCreated": "2022-07-28T15:41:50.3276067+07:00",
+    "UserUpdated": "2022-07-28T15:41:50.3276069+07:00",
+    "Token": "575c8ae3-0345a33"
+  },
+  {
+    "Id": 5,
+    "UserId": "channel",
+    "UserName": "channel",
+    "UserPass": "Gj2sZs5bEAZM9CgavuZ6Es8JhbZFt+T+x/AYR7sVkEEtNYGpl4lHgPX779MeWCOZYRTYE3GiSpF39CR0GIG64A==",
+    "UserRolesId": "rUser",
+    "Active": false,
+    "UserCreated": "2022-07-28T15:41:50.3276067+07:00",
+    "UserUpdated": "2022-07-28T15:41:50.3276069+07:00",
+    "Token": "575c8ae3-0345a35"
+  },
+  {
+    "Id": 6,
+    "UserId": "spjm",
+    "UserName": "spjm",
+    "UserPass": "Gj2sZs5bEAZM9CgavuZ6Es8JhbZFt+T+x/AYR7sVkEEtNYGpl4lHgPX779MeWCOZYRTYE3GiSpF39CR0GIG64A==",
+    "UserRolesId": "rUser",
+    "Active": false,
+    "UserCreated": "2022-07-28T15:41:50.3276067+07:00",
+    "UserUpdated": "2022-07-28T15:41:50.3276069+07:00",
+    "Token": "575c8ae3-0345a78"
+  }
+]

@@ -1,0 +1,748 @@
+﻿@{
+    ViewBag.Title = "NLE REPOST";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/Content/DataTables/datatables.css" />
+    <link rel="stylesheet" href="~/Content/DataTables/DataTables-1.10.25/css/dataTables.bootstrap5.min.css" type="text/css">
+    <link rel="stylesheet" href="~/Content/Select2/css/select2.min.css" type="text/css" />
+    <link rel="stylesheet" href="~/Content/flatpickr/flatpickr.min.css" type="text/css" />
+    <link rel="stylesheet" href="~/adminlte/plugins/jquery-ui/jquery-ui.min.css" type="text/css" />
+    <link rel="stylesheet" href="~/Content/flatpickr/plugins/monthSelect/style.css" type="text/css" />
+    <link href="~/adminlte/plugins/toastr/toastr.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/adminlte/plugins/sweetalert2/sweetalert2.css" rel="stylesheet" />
+    <style type="text/css">
+        td.details-control {
+            background: url("@Url.Content("~/Images/Default/details_open.png")") no-repeat center center;
+        }
+
+        tr.shown td.details-control {
+             background: url("@Url.Content("~/Images/Default/details_close.png")") no-repeat center center;
+        }
+    </style>
+}
+
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row mb-1">
+            <section class="col-lg-12 p-0">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <b>NLE REPOST</b>
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 col-sm-12">
+                                <div class="card card-primary card-tabs">
+                                    <div class="card-header p-0 pt-1">
+                                        <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" id="custom-tabs-one-home-tab" data-toggle="pill" href="#custom-tabs-one-home" role="tab" aria-controls="custom-tabs-one-home" aria-selected="true">NLE REPOST</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="custom-tabs-one-settings-tab" data-toggle="pill" href="#custom-tabs-one-settings" role="tab" aria-controls="custom-tabs-one-settings" aria-selected="false">REPOST LOG</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="tab-content" id="custom-tabs-one-tabContent">
+                                            <div class="tab-pane fade show active" id="custom-tabs-one-home" role="tabpanel" aria-labelledby="custom-tabs-one-home-tab">
+                                                <div class="row mb-1">
+                                                    <div class="col-sm-5">
+                                                        <div class="form-group row mb-1">
+                                                            <label class="control-label col-sm-2 col-form-label" for="txtterminal">Terminal</label>
+                                                            <div class="col-sm-10">
+                                                                @*Html.DropDownList("txtterminal", (ViewData["TermialList"] as SelectList), new { @class = "form-select form-control form-select-sm", @id = "txtterminal" })*@
+                                                                <select id="txtterminal" class="form-select form-control form-control-sm">
+                                                                    <option value="67">67</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-4">
+                                                        <div class="form-group row mb-1">
+                                                            <label class="control-label col-sm-3 col-form-label" for="txtdocno">DOC-NO</label>
+                                                            <div class="col-sm-9">
+                                                                @*Html.DropDownList("txtblno", (ViewData["bList"] as SelectList), new { @class = "form-select form-control form-select-sm", @id = "txtblno" })*@
+                                                                <select id="txtdocno" class="form-select form-control form-control-sm">
+                                                                    <option value="RCL676700001">RCL676700001</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <div class="form-group row mb-1">
+                                                            <label class="control-label col-sm-3 col-form-label" for="txtstatus">Status</label>
+                                                            <div class="col-sm-9">
+                                                                <select id="txtstatus" class="form-select form-control form-control-sm">
+                                                                    <option value="ALL" selected>All</option>
+                                                                    <option value="0">Pending</option>
+                                                                    <option value="1">Success</option>
+                                                                    <option value="500">Failed</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="row mb-1">
+                                                    <div class="col-sm-3">
+                                                        <div class="form-group row mb-1">
+                                                            <label class="control-label col-sm-3 col-form-label" for="txttgl">Tanggal</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" class="form-control form-control-sm" id="txttgl" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <div class="form-group row mb-1">
+                                                            <label class="col-form-label-sm col-sm-2" for="txttglto">s/d</label>
+                                                            <div class="col-sm-9">
+                                                                <input type="text" class="form-control form-control-sm" id="txttglto" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <div class="form-group row mb-1">
+                                                            <label class="col-form-label-sm col-sm-3" for="txtLimit">Limit</label>
+                                                            <div class="col-sm-9 mb-2">
+                                                                @*Html.DropDownList("txtLimit", (ViewData["bLimit"] as SelectList), new { @class = "form-control form-control-sm", @id = "txtLimit" })*@
+                                                                <select id="txtLimit" class="form-select form-control form-control-sm">
+                                                                    <option value="10">10</option>
+                                                                    <option value="50">50</option>
+                                                                    <option value="100">100</option>
+                                                                    <option value="500">500</option>
+                                                                </select>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-3">
+                                                        <div class="form-group row mb-1">
+                                                            <div class="col-sm-6 mb-2">
+                                                                <button id="btncari" type="button" class="btn btn-primary btn-sm">
+                                                                    <i class="fas fa-search"></i> Cari
+                                                                </button>
+                                                            </div>
+                                                            <div class="col-sm-6 text-right">
+                                                                <button id="btnResend" type="button" class="btn btn-success btn-sm">
+                                                                    <i class="fas fa-paper-plane"></i> ReSend
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="row mb-3">
+                                                    <div class='card bg-gradient-light opacity-10'>
+                                                        <div class='card-body'>
+                                                            <h5 class='card-title mb-2'>ITGR REPOST HEADER</h5>
+                                                            <div class="table-responsive table-responsive-sm p-2 bg-white border">
+                                                                <table id="tableData" class="table table-bordered table-hover w-100">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>#!!</th>
+                                                                            <th>APP_REQUEST</th>
+                                                                            <th>DOC NUMBER_SAP</th>
+                                                                            <th>DOC_NUMBER_ITGR</th>
+                                                                            <th>DOC_TYPE</th>
+                                                                            <th>DOC_DATE</th>
+                                                                            <th>REF_DOC_NO</th>
+                                                                            <th>COMP_CODE</th>
+                                                                            <th>FISC_YEAR</th>
+                                                                            <th>PSTNG_DATE</th>
+                                                                            <th>CUSTOMER</th>
+                                                                            <th>BKTXT</th>
+                                                                            <th>JASA_TEXT</th>
+                                                                            <th>SKTD</th>
+                                                                            <th>MATERAI</th>
+                                                                            <th>KAPAL</th>
+                                                                            <th>GT_KAPAL</th>
+                                                                            <th>BENDERA_KAPAL</th>
+                                                                            <th>START_DATE</th>
+                                                                            <th>END_DATE</th>
+                                                                            <th>KUNNR</th>
+                                                                            <th>PARAMETER1</th>
+                                                                            <th>PARAMETER2</th>
+                                                                            <th>PARAMETER3</th>
+                                                                            <th>PARAMETER4</th>
+                                                                            <th>PARAMETER5</th>
+                                                                            <th>PARAMETER6</th>
+                                                                            <th>PARAMETER7</th>
+                                                                            <th>PARAMETER8</th>
+                                                                            <th>PARAMETER9</th>
+                                                                            <th>PARAMETER10</th>
+                                                                            <th>TGL_KIRIM_SAP</th>
+                                                                            <th>TGL_KIRIM_TOS</th>
+                                                                            <th>REC_STAT</th>
+                                                                            <th>CREATED_DATE</th>
+                                                                            <th>CREATED_BY</th>
+                                                                            <th>LAST_UPDATED_DATE</th>
+                                                                            <th>LAST_UPDATED_BY</th>
+                                                                            <th>PROGRAM_NAME</th>
+                                                                            <th>REQ_HEADER</th>
+                                                                            <th>REQ_ITGR_DETAIL_ITEMS</th>
+                                                                            <th>REQ_ITGR_DETAIL_CHARS</th>
+                                                                            <th>ERR_SEND</th>
+                                                                            <th>TOTAL_TAGIHAN</th>
+                                                                            <th>PROFIT_CENTER</th>
+                                                                            <th>KD_CABANG</th>
+                                                                            <th>KD_TERMINAL</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                            <div class="tab-pane fade" id="custom-tabs-one-settings" role="tabpanel" aria-labelledby="custom-tabs-one-settings-tab">
+                                                <div class="row">
+                                                    <section class="col-lg-12 p-0 connectedSortable">
+                                                        <div style="background-color:navajowhite" class="card">
+                                                            <div class="card-body">
+                                                                <h5 class='card-title mb-2'>ITGR REPOST LOG</h5>
+                                                                <div class="table-responsive table-responsive-sm p-2 bg-white border">
+                                                                    <table id="tablelog" class="table table-bordered table-hover w-100">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>APP_REQUEST</th>
+                                                                                <th>DOC_NUMBER_ITGR</th>
+                                                                                <th>FISC_YEAR</th>
+                                                                                <th>XML_DATA</th>
+                                                                                <th>XML_SEND</th>
+                                                                                <th>REF_DOC_NO</th>
+                                                                                <th>REC_STAT</th>
+                                                                                <th>CREATED_DATE</th>
+                                                                                <th>CREATED_BY</th>
+                                                                                <th>LAST_UPDATED_DATE</th>
+                                                                                <th>LAST_UPDATED_BY</th>
+                                                                                <th>PROGRAM_NAME</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </section>
+                                                </div>
+
+                                                @*<div class="row mb-1">
+                                                    <div class="text-right">
+                                                        <button id="btnGetData" type="button" class="btn btn-sm btn-primary">
+                                                            Get Data
+                                                        </button>
+                                                    </div>
+                                                </div>*@
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </div>
+</section>
+
+
+@section scripts {
+    <script src="~/Scripts/moment.min.js"></script>
+    <script type="text/javascript" src="~/Content/flatpickr/flatpickr.min.js"></script>
+    <script type="text/javascript" src="~/Content/flatpickr/id.min.js"></script>
+    <script type="text/javascript" src="~/Content/DataTables/datatables.min.js"></script>
+    <script type="text/javascript" src="~/Content/DataTables/DataTables-1.10.25/js/dataTables.bootstrap5.min.js"></script>
+    <script type="text/javascript" src="~/Content/Select2/js/select2.full.min.js"></script>
+    <script type="text/javascript" src="~/adminlte/plugins/jquery-ui/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="~/Content/flatpickr/plugins/monthSelect/Index.js"></script>
+    <script type="text/javascript" src="~/adminlte/plugins/toastr/toastr.min.js"></script>
+    <script type="text/javascript" src="~/adminlte/plugins/sweetalert2/sweetalert2.js"></script>
+    <script type="text/javascript">
+        var tblheader = null;
+        var tbldetail = null;
+        var tblchars = null;
+        var tbllog = null;
+        $(document).ready(function () {
+
+            ExpandTreeView_(window.location);
+
+            $("#txtLimit,#txtstatus,#txtterminal,#txtdocno").select2({
+                width: "100%", theme: "classic", disableMobile: true
+            });
+
+            tblheader = Refresh_table_itgr_Header($("#txttgl").val(), $("#txttglto").val(), $("#txtLimit").val(), $("#txtstatus").val());
+
+            tbllog = RefreshTable_Log();
+
+            $("#btnGetData").click(function () {
+                tbllog = RefreshTable_Log();
+            })
+
+            $('#tableData tbody').on('click', 'td.details-control', function () {
+                var selRow = tblheader.rows(this).data();
+                var rowIndex = $(this).closest("tr").index();
+                var tr = $(this).closest('tr');
+                 var row = tblheader.row(tr);
+                if (row.child.isShown()) {
+                    row.child.hide();
+                    tr.removeClass('shown');
+                }
+                else {
+                    var id_ = "x" + rowIndex;
+                    row.child(Create_Nle_Detail(id_)).show();
+                    tr.addClass('shown');
+                    //tbldetail = GetDetilWith_datatable(id_, selRow[0]["REF_DOC_NO"]);
+                    GetDetailData(id_, selRow[0]["REF_DOC_NO"]);
+                }
+             });//tableData tbody
+
+
+
+        })// Doc Ready
+
+        function Refresh_table_itgr_Header(tglfrom, tglto, limit,status) {
+            return $("#tableData").DataTable({
+            bDestroy: true,
+            responsive: false,
+            processing: true,
+            "order": [[1, "asc"]],
+            serverSide: true,
+            "columnDefs": [
+                {
+                    "targets": 'no-sort',
+                    "orderable": true,
+                },
+                {
+                    "data": null,
+                    "width": "20px",
+                    "defaultContent": '',
+                    "orderable": true,
+                    "className": "details-control",
+                    "targets": [0]
+                }
+            ],
+            "columns": [
+                { "data": null },
+                { "data": "APP_REQUEST", "name": "APP_REQUEST" },
+                { "data": "DOC_NUMBER_SAP", "name": "DOC_NUMBER_SAP" },
+                { "data": "DOC_NUMBER_ITGR", "name": "DOC_NUMBER_ITGR" },
+                { "data": "DOC_TYPE", "name": "DOC_TYPE" },
+                { "data": "DOC_DATE", "name": "DOC_DATE" },
+                { "data": "REF_DOC_NO", "name": "REF_DOC_NO" },
+                { "data": "COMP_CODE", "name": "COMP_CODE" },
+                { "data": "FISC_YEAR", "name": "FISC_YEAR" },
+                { "data": "PSTNG_DATE", "name": "PSTNG_DATE" },
+                { "data": "CUSTOMER", "name": "CUSTOMER" },
+                { "data": "BKTXT", "name": "BKTXT" },
+                { "data": "JASA_TEXT", "name": "JASA_TEXT" },
+                { "data": "SKTD", "name": "SKTD" },
+                { "data": "MATERAI", "name": "MATERAI" },
+                { "data": "KAPAL", "name": "KAPAL" },
+                { "data": "GT_KAPAL", "name": "GT_KAPAL" },
+                { "data": "BENDERA_KAPAL", "name": "BENDERA_KAPAL" },
+                {
+                    "data": "START_DATE", "name": "START_DATE",
+                    "render": function (data, type, row, meta) {
+                        return moment(row.START_DATE).format('DD/MMM/YYYY HH:mm:ss');
+                    }
+                },
+                {
+                    "data": "END_DATE", "name": "END_DATE",
+                    "render": function (data, type, row, meta) {
+                        return moment(row.END_DATE).format('DD/MMM/YYYY HH:mm:ss');
+                    }
+                },
+                { "data": "KUNNR", "name": "KUNNR" },
+                { "data": "PARAMETER1", "name": "PARAMETER1" },
+                { "data": "PARAMETER2", "name": "PARAMETER2" },
+                { "data": "PARAMETER3", "name": "PARAMETER3" },
+                { "data": "PARAMETER4", "name": "PARAMETER4" },
+                { "data": "PARAMETER5", "name": "PARAMETER5" },
+                { "data": "PARAMETER6", "name": "PARAMETER6" },
+                { "data": "PARAMETER7", "name": "PARAMETER7" },
+                { "data": "PARAMETER8", "name": "PARAMETER8" },
+                { "data": "PARAMETER9", "name": "PARAMETER9" },
+                { "data": "PARAMETER10", "name": "PARAMETER10" },
+                { "data": "TGL_KIRIM_SAP", "name": "TGL_KIRIM_SAP" },
+                { "data": "TGL_KIRIM_TOS", "name": "TGL_KIRIM_TOS" },
+                { "data": "REC_STAT", "name": "REC_STAT" },
+                {
+                    "data": "CREATED_DATE", "name": "CREATED_DATE",
+                    "render": function (data, type, row, meta) {
+                        return moment(row.CREATED_DATE).format('DD/MMM/YYYY HH:mm:ss');
+                    }
+                },
+                { "data": "CREATED_BY", "name": "CREATED_BY" },
+                {
+                    "data": "LAST_UPDATED_DATE", "name": "LAST_UPDATED_DATE",
+                    "render": function (data, type, row, meta) {
+                        return moment(row.LAST_UPDATED_DATE).format('DD/MMM/YYYY HH:mm:ss');
+                    }
+                },
+                { "data": "LAST_UPDATED_BY", "name": "LAST_UPDATED_BY" },
+                { "data": "PROGRAM_NAME", "name": "PROGRAM_NAME" },
+                { "data": "REQ_HEADER", "name": "REQ_HEADER" },
+                { "data": "REQ_ITGR_DETAIL_ITEMS", "name": "REQ_ITGR_DETAIL_ITEMS" },
+                { "data": "REQ_ITGR_DETAIL_CHARS", "name": "REQ_ITGR_DETAIL_CHARS" },
+                { "data": "ERR_SEND", "name": "ERR_SEND" },
+                {
+                    "data": "TOTAL_TAGIHAN", "name": "TOTAL_TAGIHAN",
+                    "render": $.fn.dataTable.render.number(',', '.', 2, '')
+                },
+                { "data": "PROFIT_CENTER", "name": "PROFIT_CENTER" },
+                { "data": "KD_CABANG", "name": "KD_CABANG" },
+                { "data": "KD_TERMINAL", "name": "KD_TERMINAL" }
+            ],
+            "select": {
+                "style": 'multi'
+            },
+            "language":
+            {
+                "search": "",
+                "searchPlaceholder": "Search...",
+                "emptyTable": "No record found.",
+                "processing": "<div class='overlay custom-loader-background'><i class='fa fa-spinner fa-spin custom-loader-color' style='font-size:30px;color:rgb(75, 183, 245)'></i></div>"
+            },
+            "processing": "true",
+            "order": [[1, "asc"]],
+            "serverSide": "true",
+            "lengthMenu": [[1, 10, 20, 50, 100, 1000, -1], [1, 10, 20, 50, 100, 1000, "All"]],
+            "pageLength": 10,
+            "ajax":
+            {
+                "url": '@Url.Action("GetData", "NleRepos", new { Area = "GeneralTable" })',
+                "type": "POST",
+                "data": { "tglfrom_": tglfrom, "tglto_": tglto, "limit_": limit, "status_": status  },
+                "dataType": "JSON"
+            }
+        });
+        }
+
+        function Create_Nle_Detail(id_) {
+            var str = "";
+            str += "<div class='card bg-gradient-teal opacity-10'>";
+            str += "    <div class='card-body'>";
+            str += "        <h5 class='card-title mb-2'>ITGR REPOST DETAIL ITEMS</h5>";
+
+            str += "  <div class='table-responsive table-responsive-sm p-2 bg-white border'>";
+            str += "                                                                  <table id='"+id_+"' class='table table-bordered table-hover w-100'>";
+            str += "                                                                      <thead>";
+            str += "                                                                         <tr>";
+            str += "<th>#</th>";
+            str += "<th>APP_REQUEST </th>";
+            str += "<th>DOC_NUMBER_SAP </th>";
+            str += "<th>DOC_NUMBER_ITGR </th>";
+            str += "<th>DOC_TYPE </th>";
+            str += "<th>DOC_DATE </th>";
+            str += "<th>REF_DOC_NO </th>";
+            str += "<th>ITEMNO_ACC </th>";
+            str += "<th>ALLOC_NMBR </th>";
+            str += "<th>AMOUNT </th>";
+            str += "<th>AMOUNT_REDUKSI </th>";
+            str += "<th>CURRENCY </th>";
+            str += "<th>ITEM_TEXT </th>";
+            str += "<th>KODE_JASA </th>";
+            str += "<th>PROFIT_CTR </th>";
+            str += "<th>TGL_KIRIM_SAP </th>";
+            str += "<th>TGL_KIRIM_TOS </th>";
+            str += "<th>REC_STAT </th>";
+            str += "<th>CREATED_DATE </th>";
+            str += "<th>CREATED_BY </th>";
+            str += "<th>LAST_UPDATED_DATE </th>";
+            str += "<th>LAST_UPDATED_BY </th>";
+            str += "<th>PROGRAM_NAME </th>";
+            str += "                                                                    </tr>";
+            str += "                                                                </thead>";
+            str += "                                                           </table>";
+            str += "                                                        </div>";
+
+            str += "   </div>";
+            str += "</div>";
+            return str;
+        }
+
+        function GetDetailData(id_tbl, ref_doc_no) {
+            //console.log(id_tbl + "\n" + ref_doc_no);
+            tbldetail = GetDetilWith_datatable(id_tbl, ref_doc_no);
+
+            // start
+            $("#" + id_tbl+" tbody").on("click", "td.details-control", function () {
+                var selRow = tbldetail.rows(this).data();
+                var rowIndex = $(this).closest("tr").index();
+                var tr = $(this).closest('tr');
+                var row = tbldetail.row(tr);
+                if (row.child.isShown()) {
+                    row.child.hide();
+                    tr.removeClass('shown');
+                }
+                else {
+                    var id_ = "xchars" + rowIndex;
+                    row.child(CreateDetil_Chars(id_)).show();
+                    tr.addClass('shown');
+                    GetDetilChars(id_, selRow[0]["REF_DOC_NO"]);
+                }
+            });
+            //stop
+        }
+
+        function GetDetilWith_datatable(id_tbl, ref_doc_no) {
+            return $("#" + id_tbl).DataTable({
+                bDestroy: true,
+                responsive: false,
+                processing: true,
+                "order": [[1, "asc"]],
+                serverSide: true,
+                "columnDefs": [
+                    {
+                        "targets": 'no-sort',
+                        "orderable": true,
+                    },
+                    {
+                        "data": null,
+                        "width": "20px",
+                        "defaultContent": '',
+                        "orderable": true,
+                        "className": "details-control",
+                        "targets": [0]
+                    }
+                ],
+                "columns": [
+                    { "data": null },
+                    { "data": "APP_REQUEST", "name": "APP_REQUEST" },
+                    { "data": "DOC_NUMBER_SAP", "name": "DOC_NUMBER_SAP" },
+                    { "data": "DOC_NUMBER_ITGR", "name": "DOC_NUMBER_ITGR" },
+                    { "data": "DOC_TYPE", "name": "DOC_TYPE" },
+                    { "data": "DOC_DATE", "name": "DOC_DATE" },
+                    { "data": "REF_DOC_NO", "name": "REF_DOC_NO" },
+                    { "data": "ITEMNO_ACC", "name": "ITEMNO_ACC" },
+                    { "data": "ALLOC_NMBR", "name": "ALLOC_NMBR" },
+                    {
+                        "data": "AMOUNT", "name": "AMOUNT",
+                        "render": $.fn.dataTable.render.number(',', '.', 2, '')
+                    },
+                    {
+                        "data": "AMOUNT_REDUKSI", "name": "AMOUNT_REDUKSI",
+                        "render": $.fn.dataTable.render.number(',', '.', 2, '')
+                    },
+                    { "data": "CURRENCY", "name": "CURRENCY" },
+                    { "data": "ITEM_TEXT", "name": "ITEM_TEXT" },
+                    { "data": "KODE_JASA", "name": "KODE_JASA" },
+                    { "data": "PROFIT_CTR", "name": "PROFIT_CTR" },
+                    { "data": "TGL_KIRIM_SAP", "name": "TGL_KIRIM_SAP" },
+                    { "data": "TGL_KIRIM_TOS", "name": "TGL_KIRIM_TOS" },
+                    { "data": "REC_STAT", "name": "REC_STAT" },
+                    {
+                        "data": "CREATED_DATE", "name": "CREATED_DATE",
+                        "render": function (data, type, row, meta) {
+                            return moment(row.CREATED_DATE).format('DD/MMM/YYYY HH:mm:ss');
+                        }
+                    },
+                    { "data": "CREATED_BY", "name": "CREATED_BY" },
+                    {
+                        "data": "LAST_UPDATED_DATE", "name": "LAST_UPDATED_DATE",
+                        "render": function (data, type, row, meta) {
+                            return moment(row.LAST_UPDATED_DATE).format('DD/MMM/YYYY HH:mm:ss');
+                        }
+                    },
+                    { "data": "LAST_UPDATED_BY", "name": "LAST_UPDATED_BY" },
+                    { "data": "PROGRAM_NAME", "name": "PROGRAM_NAME" }
+                ],
+                "select": {
+                    "style": 'multi'
+                },
+                "language":
+                {
+                    "search": "",
+                    "searchPlaceholder": "Search...",
+                    "emptyTable": "No record found.",
+                    "processing": "<div class='overlay custom-loader-background'><i class='fa fa-spinner fa-spin custom-loader-color' style='font-size:30px;color:rgb(75, 183, 245)'></i></div>"
+                },
+                "processing": "true",
+                "order": [[1, "asc"]],
+                "serverSide": "true",
+                "lengthMenu": [[1, 10, 20, 50, 100, 1000, -1], [1, 10, 20, 50, 100, 1000, "All"]],
+                "pageLength": 10,
+                "ajax":
+                {
+                    "url": '@Url.Action("GetDetail", "NleRepos", new { Area = "GeneralTable" })',
+                    "type": "POST",
+                    "data": { "ref_doc_no": ref_doc_no},
+                    "dataType": "JSON"
+                }
+            })
+        }
+
+        function CreateDetil_Chars(tabel_char_id) {
+            var str = "";
+            str += "<div class='card bg-gradient-info opacity-10'>";
+            str += "    <div class='card-body'>";
+            str += "        <h5 class='card-title mb-2'>ITGR REPOST DETAIL CHARS</h5>";
+            str += "        <div class='table-responsive table-responsive-sm p-2 bg-white border'>";
+            str += "           <table id='" + tabel_char_id+"' class='table table-bordered table-hover w-100'>";
+            str += "               <thead>";
+            str += "               <tr>";
+            str += "                   <th>APP_REQUEST</th>";
+            str += "                   <th>DOC_NUMBER_SAP</th>";
+            str += "                   <th>DOC_NUMBER_ITGR</th>";
+            str += "                 <th>DOC_TYPE</th>";
+            str += "                 <th>DOC_DATE</th>";
+            str += "                 <th>REF_DOC_NO</th>";
+            str += "                 <th>ITEMNO_ACC</th>";
+            str += "                 <th>FIELDNAME</th>";
+            str += "                <th>CHARACTER</th>";
+            str += "                <th>TGL_KIRIM_SAP</th>";
+            str += "                <th>TGL_KIRIM_TOS</th>";
+            str += "                <th>REC_STAT</th>";
+            str += "                <th>CREATED_DATE</th>";
+            str += "                <th>CREATED_BY</th>";
+            str += "                <th>LAST_UPDATED_DATE</th>";
+            str += "                <th>LAST_UPDATED_BY</th>";
+            str += "                <th>PROGRAM_NAME</th>";
+            str += "            </tr>";
+            str += "            </thead>";
+            str += "        </table>";
+            str += "    </div>";
+            str += " </div>";
+            str += "</div>";
+            return str;
+        }
+
+        function GetDetilChars(id_tbl_chars, doc_no) {
+            var fd = new FormData();
+            fd.append("doc_no", doc_no);
+            $.ajax({
+                    url: '@Url.Action("GetDetailChars", "NleRepos", new { Area = "GeneralTable" })',
+                type: 'post',
+                data: fd,
+                contentType: false,
+                processData: false,
+                    success: function (x, textStatus, jQxhr) {
+                        if (x.status === 'success') {
+                            GetDetilChars_dataTable(id_tbl_chars, x);
+                         } else {
+                             console.log("status error");
+                         }
+                    },
+                     error: function (jqXhr, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    }
+                });
+            //console.log(id_tbl_chars+"\n"+ doc_no);
+            //tblchars = GetDetilChars_dataTable(id_tbl_chars, doc_no);
+        }
+
+        function GetDetilChars_dataTable(id_tbl, x) {
+            $("#" + id_tbl).DataTable({
+                stateSave: true,
+                "bDestroy": true,
+                "paging": true,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": true,
+                "info": true,
+                "autoWidth": false,
+                "responsive": true,
+                "data": x.data,
+                "columns": [
+                    { "data": "APP_REQUEST", "name": "APP_REQUEST" },
+                    { "data": "DOC_NUMBER_SAP", "name": "DOC_NUMBER_SAP" },
+                    { "data": "DOC_NUMBER_ITGR", "name": "DOC_NUMBER_ITGR" },
+                    { "data": "DOC_TYPE", "name": "DOC_TYPE" },
+                    { "data": "DOC_DATE", "name": "DOC_DATE" },
+                    { "data": "REF_DOC_NO", "name": "REF_DOC_NO" },
+                    { "data": "ITEMNO_ACC", "name": "ITEMNO_ACC" },
+                    { "data": "FIELDNAME", "name": "FIELDNAME" },
+                    { "data": "CHARACTER", "name": "CHARACTER" },
+                    { "data": "TGL_KIRIM_SAP", "name": "TGL_KIRIM_SAP" },
+                    { "data": "TGL_KIRIM_TOS", "name": "TGL_KIRIM_TOS" },
+                    { "data": "REC_STAT", "name": "REC_STAT" },
+                    {
+                        "data": "CREATED_DATE", "name": "CREATED_DATE",
+                        "render": function (data, type, row, meta) {
+                            return moment(row.CREATED_DATE).format('DD/MMM/YYYY HH:mm:ss');
+                        }
+                    },
+                    { "data": "CREATED_BY", "name": "CREATED_BY" },
+                    {
+                        "data": "LAST_UPDATED_DATE", "name": "LAST_UPDATED_DATE",
+                        "render": function (data, type, row, meta) {
+                            return moment(row.LAST_UPDATED_DATE).format('DD/MMM/YYYY HH:mm:ss');
+                        }
+                    },
+                    { "data": "LAST_UPDATED_BY", "name": "LAST_UPDATED_BY" },
+                    { "data": "PROGRAM_NAME", "name": "PROGRAM_NAME" }
+                ],
+            })
+        }// end datatable
+
+        function RefreshTable_Log() {
+            return $("#tablelog").DataTable({
+                bDestroy: true,
+                responsive: false,
+                processing: true,
+                "order": [[1, "asc"]],
+                serverSide: true,
+                "columnDefs": [
+                    {
+                        "targets": 'no-sort',
+                        "orderable": true,
+                    }
+                ],
+                "columns": [
+                    { "data": "APP_REQUEST", "name": "APP_REQUEST" },
+                    { "data": "DOC_NUMBER_ITGR", "name": "DOC_NUMBER_ITGR" },
+                    { "data": "FISC_YEAR", "name": "FISC_YEAR" },
+                    { "data": "XML_DATA", "name": "XML_DATA" },
+                    { "data": "XML_SEND", "name": "XML_SEND" },
+                    { "data": "REF_DOC_NO", "name": "REF_DOC_NO" },
+                    { "data": "REC_STAT", "name": "REC_STAT" },
+                    {
+                        "data": "CREATED_DATE", "name": "CREATED_DATE",
+                        "render": function (data, type, row, meta) {
+                            return moment(row.CREATED_DATE).format('DD/MMM/YYYY HH:mm:ss');
+                        }
+                    },
+                    { "data": "CREATED_BY", "name": "CREATED_BY" },
+                    {
+                        "data": "LAST_UPDATED_DATE", "name": "LAST_UPDATED_DATE",
+                             "render": function (data, type, row, meta) {
+                            return moment(row.LAST_UPDATED_DATE).format('DD/MMM/YYYY HH:mm:ss');
+                        }
+                    },
+                    { "data": "LAST_UPDATED_BY", "name": "LAST_UPDATED_BY" },
+                    { "data": "PROGRAM_NAME", "name": "PROGRAM_NAME" }
+                ],
+                "select": {
+                    "style": 'multi'
+                },
+                "language":
+                {
+                    "search": "",
+                    "searchPlaceholder": "Search...",
+                    "emptyTable": "No record found.",
+                    "processing": "<div class='overlay custom-loader-background'><i class='fa fa-spinner fa-spin custom-loader-color' style='font-size:30px;color:rgb(75, 183, 245)'></i></div>"
+                },
+                "processing": "true",
+                "order": [[1, "asc"]],
+                "serverSide": "true",
+                "lengthMenu": [[1, 10, 20, 50, 100, 1000, -1], [1, 10, 20, 50, 100, 1000, "All"]],
+                "pageLength": 10,
+                "ajax":
+                {
+                    "url": '@Url.Action("GetLog", "NleRepos", new { Area = "GeneralTable" })',
+                    "type": "POST",
+                    "data": { "ref_doc_no": ""},
+                    "dataType": "JSON"
+                }
+            })
+        }
+    </script>
+}

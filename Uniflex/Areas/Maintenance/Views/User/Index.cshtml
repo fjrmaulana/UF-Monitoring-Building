@@ -1,0 +1,619 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@section Styles {
+    <link rel="stylesheet" href="~/Content/DataTables/datatables.css" />
+    <link href="~/Content/select2/css/select2.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/adminlte/plugins/sweetalert2/sweetalert2.min.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        td.details-control {
+            background: url("@Url.Content("~/Images/Default/details_open.png")") no-repeat center center;
+        }
+
+        tr.shown td.details-control {
+             background: url("@Url.Content("~/Images/Default/details_close.png")") no-repeat center center;
+        }
+    </style>
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <section class="col-lg-12 p-0">
+                <div id="cardmaster" class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <b>Menu User</b>
+                        </h3>
+                        <div class="card-tools">
+                            <a type="button" class="btn btn-tool" href="#" data-card-widget="collapse" title="Collapse">
+                                <i class="fas fa-minus"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card">
+                            <div class="card-header">
+
+                                <div class="card-tools">
+                                    <ul class="nav nav-pills ml-auto">
+                                        <li id="parent_btn_add_company" class="nav-item mr-1">
+                                            <a id="btn_add_user" class="nav-link active bg-primary" href="#" data-toggle="tab">
+                                                Create
+                                            </a>
+                                        </li>
+                                        <li class="nav-item mr-1">
+                                            <a id="btn_refresh_user" class="nav-link active bg-success" href="#" data-toggle="tab">
+                                                Refresh
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a id="btn_delete_user" class="nav-link active bg-danger" href="#" data-toggle="tab">
+                                                Delete
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-1">
+                                    <div id='grid_master' class='table-responsive table-responsive-sm p-2 bg-white'>
+                                        <table id='tbluser' class='display compact dataTable table caption-top table-striped table-hover w-100'>
+                                            <caption style='caption-side:top'>Untuk membuat User Baru, Edit dan Delete User</caption>
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Use id</th>
+                                                    <th>User Name</th>
+                                                    <th>Org</th>
+                                                    <th>Role</th>
+                                                    <th>Id</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+    </div>
+</section>
+
+<div id="partialview"></div>
+
+@section scripts {
+    <script src="~/Scripts/moment.min.js"></script>
+    <script type="text/javascript" src="~/Content/DataTables/datatables.min.js"></script>
+    <script type="text/javascript" src="~/Content/Select2/js/select2.full.min.js"></script>
+    <script type="text/javascript" src="~/adminlte/plugins/sweetalert2/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap-show-password.min.js"></script>
+    <script type="text/javascript">
+        var tbluser_ = null;
+        $(document).ready(function () {
+
+            ExpandTreeView_(window.location);
+
+            tbluser_ = Refresh_table_User();
+            $('#tbluser tbody').on('click', 'td.details-control', function () {
+                var selRow = tbluser_.rows(this).data();
+                var rowIndex = $(this).closest("tr").index();
+                var tr = $(this).closest('tr');
+                var row = tbluser_.row(tr);
+                if (row.child.isShown()) {
+                    row.child.hide();
+                    tr.removeClass('shown');
+                }
+                else {
+                    var id_ = "x" + rowIndex;
+                    var user_id = selRow[0]["USER_ID"];
+                    row.child(format(id_)).show();
+                    tr.addClass('shown');
+                    GetDetailData(id_, user_id);
+                }
+            })
+
+            $("#btn_add_user").click(function () {
+                AddNewUser();
+            });
+
+            $("#btn_refresh_user").click(function () {
+                tbluser_ = Refresh_table_User();
+            })
+
+            $("#btn_delete_user").click(function () {
+                DeleteUser();
+            })
+
+        })//  $(document).ready(function ()
+
+        function DeleteUser() {
+            var selRow = tbluser_.rows('.selected').data();
+            var data = null;
+            if (selRow.length <= 0) {
+                Swal.fire({
+                    icon: 'info',
+                    html: '<a href="#">' + 'Please Selected Data First!' + '</a>',
+                    showCancelButton: false,
+                    confirmButtonText: 'OK'
+                })
+                return false;
+            }
+            var Uid = selRow[0]["USER_ID"];
+            var UName = selRow[0]["USER_FULLNAME"];
+            Swal.fire({
+                    title: '<strong>Konfirmasi Delete User</strong>',
+                    icon: 'info',
+                    html:
+                        'Are you sure to delete: <br>' + '<a href="#">' + UName +'?</a>',
+                    showDenyButton:false,
+                    showCancelButton: true,
+                    confirmButtonText: 'Delete',
+                    denyButtonText: 'Don`t Delete',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var fd = new FormData();
+                        fd.append("uid", Uid);
+                          $.ajax({
+                              url: '@Url.Action("DeleteUser", "User",new { Areas="Maintenance"})',
+                              type: 'post',
+                              data: fd,
+                              contentType: false,
+                              processData: false,
+                                success: function (x, textStatus, jQxhr) {
+                                    if (x.status == "success") {
+                                        tbluser_ = Refresh_table_User();
+                                    }
+                                },
+                                error: function (jqXhr, textStatus, errorThrown) {
+                                    console.log(errorThrown);
+                                }
+                            });
+                    } else if (result.isDenied) {
+                        Swal.fire('Cant Be Delete!', '', 'info')
+                    }
+                })
+        }
+
+        function format(rowId) {
+            //console.log (rowId+"\n"+userId)
+            let str = "";
+            str += "<div class='row'>";
+            str += "    <div class='form-group row'>";
+            str += "        <label for='"+rowId+ "_id"+"' class='col-sm-2 col-form-label'>Id</label>";
+            str += "       <div class='col-sm-5'>";
+            str += "           <input type='text' readonly class='form-control-plaintext form-control-sm' id='" + rowId + "_id" +"' value=''>";
+            str += "       </div>";
+            str += "   </div>";
+            str += "   <div class='form-group row'>";
+            str += "       <label for='" + rowId +"_userid' class='col-sm-2 col-form-label'>User Id</label>";
+            str += "       <div class='col-sm-5'>";
+            str += "           <input type='text' readonly class='form-control-plaintext form-control-sm' id='" + rowId +"_userid' value=''>";
+            str += "       </div>";
+            str += "   </div>";
+            str += "   <div class='form-group row'>";
+            str += "       <label for='"+ rowId +"_username' class='col-sm-2 col-form-label'>User Name</label>";
+            str += "       <div class='col-sm-5'>";
+            str += "           <input type='text' readonly class='form-control-plaintext form-control-sm' id='" + rowId +"_username' value=''>";
+            str += "       </div>";
+            str += "  </div>";
+            str += "    <div class='form-group row'>";
+            str += "        <label for='" + rowId + "_org" + "' class='col-sm-2 col-form-label'>Org</label>";
+            str += "       <div class='col-sm-5'>";
+            str += "           <input type='text' readonly class='form-control-plaintext form-control-sm' id='" + rowId + "_org" + "' value=''>";
+            str += "       </div>";
+            str += "   </div>";
+            str += "    <div style='display:none;' class='form-group row'>";
+            str += "        <label for='" + rowId + "_joint" + "' class='col-sm-2 col-form-label'>Joint</label>";
+            str += "       <div class='col-sm-5'>";
+            str += "           <input type='text' readonly class='form-control-plaintext form-control-sm' id='" + rowId + "_joint" + "' value=''>";
+            str += "       </div>";
+            str += "   </div>";
+            str += "    <div style='display:none;' class='form-group row'>";
+            str += "        <label for='" + rowId + "_exp" + "' class='col-sm-2 col-form-label'>Exp</label>";
+            str += "       <div class='col-sm-5'>";
+            str += "           <input type='text' readonly class='form-control-plaintext form-control-sm' id='" + rowId + "_exp" + "' value=''>";
+            str += "       </div>";
+            str += "   </div>";
+            str += "    <div style='display:none;' class='form-group row'>";
+            str += "        <label for='" + rowId + "_email" + "' class='col-sm-2 col-form-label'>Email</label>";
+            str += "       <div class='col-sm-5'>";
+            str += "           <input type='text' readonly class='form-control-plaintext form-control-sm' id='" + rowId + "_email" + "'>";
+            str += "       </div>";
+            str += "   </div>";
+            str += "    <div style='display:none;' class='form-group row'>";
+            str += "        <label for='" + rowId + "_entry" + "' class='col-sm-2 col-form-label'>Email</label>";
+            str += "       <div class='col-sm-5'>";
+            str += "           <input type='text' readonly class='form-control-plaintext form-control-sm' id='" + rowId + "_entry" + "'>";
+            str += "       </div>";
+            str += "   </div>";
+            str += "  <div class='form-group row'>";
+            str += "      <label for='"+rowId+"_password' class='col-sm-2 col-form-label'>Password</label>";
+            str += "      <div class='col-sm-5'>";
+            str += "          <input type='password' class='form-control form-control-md' id='" + rowId +"_password' value='123456' data-toggle='password' >";
+            str += "       </div>";
+            str += "   </div>";
+            str += "   <div class='form-group row'>";
+            str += "      <label for='"+rowId+"_role' class='col-sm-2 col-form-label'>Role</label>";
+            str += "      <div class='col-sm-5'>";
+            str += "         <select class='form-select form-control form-control-sm' id='" + rowId +"_role'>";
+            str += "             <option>True</option>";
+            str += "             <option>False</option>";
+            str += "         </select>";
+            str += "     </div>";
+            str += " </div>";
+            str += "  <div class='form-group row'>";
+            str += "       <label for='"+rowId+"_active' class='col-sm-2 col-form-label'>Active</label>";
+            str += "      <div class='col-sm-5'>";
+            str += "          <select class='form-select form-control form-control-sm' id='" + rowId +"_active'>";
+            str += "             <option value='true'>True</option>";
+            str += "             <option value='false'>False</option>";
+            str += "         </select>";
+            str += "    </div>";
+            str += "</div>";
+            str += "<div class='form-group row'>";
+            str += "     <label for='"+rowId+"_token' class='col-sm-2 col-form-label'>Token</label>";
+            str += "     <div class='col-sm-5'>";
+            str += "         <input type='password' class='form-control form-control-md' id='" + rowId +"_token' value='2343245sasd324qw3' data-toggle='password'>";
+            str += "     </div>";
+            str += " </div>";
+            str += " <div class='form-group row'>";
+            str += "     <label for='"+rowId+"_created' class='col-sm-2 col-form-label'>Created</label>";
+            str += "     <div class='col-sm-5'>";
+            str += "        <input type='text' readonly class='form-control-plaintext form-control-sm' id='" + rowId +"_created' value='xxxxxxxxx'>";
+            str += "    </div>";
+            str += "</div>";
+            str += "<div class='form-group row'>";
+            str += "    <label for='"+rowId+"_update' class='col-sm-2 col-form-label'>Update</label>";
+            str += "    <div class='col-sm-5'>";
+            str += "        <input type='text' readonly class='form-control-plaintext form-control-sm' id='" + rowId +"_update' value='xxxxxxxxx'>";
+            str += "    </div>";
+            str += " </div>";
+            str += "</div>";
+
+            str += "<div class='row mb-5'>";
+            str += "    <div class='col-sm-7'>";
+            str += "        <div class='text-right'>";
+            str += "           <button id='"+rowId+"btnUpdate' type='button' class='btn btn-sm btn-primary'>Update</button>";
+            str += "       </div>";
+            str += "   </div>";
+            str += "</div>";
+            return str;
+        }
+
+        function Refresh_table_User() {
+            return $("#tbluser").DataTable({
+                bDestroy: true,
+                responsive: true,
+                processing: true,
+                "order": [[1, "asc"]],
+                serverSide: true,
+                "lengthMenu": [[5, 10, 20, 50, 100, 1000, -1], [5, 10, 20, 50, 100, 1000, "All"]],
+                "pageLength": 10,
+                "ajax":
+                {
+                    "url": '@Url.Action("GetUser", "User", new { Area = "Maintenance" })',
+                    "type": "POST",
+                    "dataType": "JSON"
+                },
+                "columnDefs": [
+                    {
+                        "targets": 'no-sort',
+                        "orderable": true,
+                    },
+                    {
+                        "data": null,
+                        "width": "20px",
+                        "defaultContent": '',
+                        "orderable": true,
+                        "className": "details-control",
+                        "targets": [0]
+                    }
+                ],
+                "columns": [
+                    { "data": null },
+                    { "data": "USER_ID", "name": "USER_ID" },
+                    { "data": "USER_FULLNAME", "name": "USER_FULLNAME" },
+                    { "data": "USER_ORG", "name": "USER_ORG" },
+                    { "data": "USER_ROLE", "name": "USER_ROLE" },
+                    { "data": "ID", "name": "ID" }
+                ],
+                "select": {
+                    "style": 'os'
+                },
+                "language":
+                {
+                    "search": "",
+                    "searchPlaceholder": "Search...",
+                    "emptyTable": "No record found.",
+                    "processing": "<div class='overlay custom-loader-background'><i class='fa fa-spinner fa-spin custom-loader-color' style='font-size:40px;color:rgb(75, 183, 245)'></i></div>"
+                }
+            })
+        }
+
+        function GetDetailData(id_, user_id) {
+            var fd = new FormData();
+            fd.append("userid", user_id);
+            $.ajax({
+                    url: '@Url.Action("GetDetailData", "User", new { Area = "Maintenance" })',
+                    type: 'post',
+                    data: fd,
+                    contentType: false,
+                    processData: false,
+                success: function (x, textStatus, jQxhr) {
+                        if (x.status==="success") {
+                            $("#" + id_ + "_id").val(x.data.ID);
+                            $("#" + id_ + "_userid").val(x.data.USER_ID);
+                            $("#" + id_ + "_username").val(x.data.USER_FULLNAME);
+                            $("#" + id_ + "_token").val(x.data.USER_TOKEN_TRX); HidePass(id_ + "_token");
+                            $("#" + id_ + "_password").val(x.data.USER_PASS); HidePass(id_ + "_password");
+                            $("#" + id_ + "_org").val(x.data.USER_ORG);
+                            $("#" + id_ + "_exp").val(x.data.USER_EXP);
+                            $("#" + id_ + "_email").val(x.data.USER_EMAIL);
+                            $("#" + id_ + "_entry").val(x.data.USER_ENTRY);
+                            $("#" + id_ + "_joint").val(x.data.USER_JOINT);
+                            $("#" + id_ + "_active").val(x.data.USER_ACTIVE.toString()).change();
+                            $("#" + id_ + "_created").val(moment(x.data.USER_JOINT).format('DD/MMM/YYYY HH:mm:ss'));
+                            $("#" + id_ + "_update").val(moment(x.data.USER_UPDATE).format('DD/MMM/YYYY HH:mm:ss'));
+                            $("#" + id_ + "_role").empty();
+                            $.each(x.role, function (i, item) {
+                                $("#" + id_ + "_role").append('<option value="' + item.RoleId + '"> ' + item.RoleName + '</option>');
+                            });
+                            $("#" + id_ + "_role").val(x.data.USER_ROLE).change();
+                        }
+                    },
+                    error: function (jqXhr, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    }
+            });
+
+            $("#" + id_ + "btnUpdate").click(function () {
+                BtnLoading("#" + id_ + "btnUpdate");
+                var data = {
+                    USER_ID: $("#" + id_ + "_userid").val(),
+                    USER_TOKEN_TRX: $("#" + id_ + "_token").val(),
+                    USER_UPDATE: GetDateToday(),
+                    USER_TOKEN_EMAIL_KONFIRM : 1,
+                    USER_TOKEN_EMAIL:"tknEmail@mail.com",
+                    USER_ROLE: $("#" + id_ + "_role").val(),
+                    USER_ORG:$("#" + id_ + "_org").val(),
+                    ENTRY_DATE: $("#" + id_ + "_created").val(),
+                    TRX_COUNT : 0,
+                    ID: $("#" + id_ + "_id").val(),
+                    USER_ACTIVE: $("#" + id_ + "_active").val(),
+                    USER_EMAIL: $("#" + id_ + "_email").val(),
+                    USER_ENTRY: $("#" + id_ + "_entry").val(),
+                    USER_EXP: $("#" + id_ + "_exp").val(),
+                    USER_FULLNAME: $("#" + id_ + "_username").val(),
+                    USER_JOINT: $("#" + id_ + "_joint").val(),
+                    USER_PASS: $("#" + id_ + "_password").val()
+                }
+                //console.log(JSON.stringify(data));
+                $.ajax({
+                    url: '@Url.Action("UpdateUser", "User", new { Area = "Maintenance" })',
+                    type: 'POST',
+                    data: JSON.stringify(data),
+                    contentType: "application/json; charset=utf-8",
+                    success: function (x, textStatus, jQxhr) {
+                        BtnReset("#" + id_ + "btnUpdate");
+                        if (x.status==="success") {
+                            console.log(x);
+                        }
+                    },
+                    error: function (jqXhr, textStatus, errorThrown) {
+                        BtnReset("#" + id_ + "btnUpdate");
+                        console.log(errorThrown);
+                    }
+                });
+            })
+        }
+
+        function HidePass(idElement) {
+            $("#" + idElement).password({
+                eyeClass: 'fa',
+                eyeOpenClass: 'fa-eye',
+                eyeCloseClass: 'fa-eye-slash',
+                eyeClassPositionInside: false
+            });
+        }
+
+        function trim_text(el) {
+            el.value = el.value.
+                replace(/(^\s*)|(\s*$)/gi, ""). // removes leading and trailing spaces
+                replace(/[ ]{2,}/gi, " "). // replaces multiple spaces with one space
+                replace(/\n +/, "\n"); // Removes spaces after newlines
+            return;
+        }
+
+         function AddNewUser() {
+            const modal_add_attr = {id: 'mastercreate',class: 'modal fade',tabindex: '-1',role: 'dialog','aria-labelledby': '-1','aria-hidden': 'true'};
+            var modal_add = document.createElement("div");
+            setAttributes(modal_add, modal_add_attr);
+
+            const modal_document_attr = { class: 'modal-dialog modal-dialog-centered', role: 'document' };
+            var modal_document = document.createElement("div");
+            setAttributes(modal_document, modal_document_attr); modal_add.appendChild(modal_document);
+
+            const modal_content_attr = { class: 'modal-content' };
+            var modal_content = document.createElement("div");
+            setAttributes(modal_content, modal_content_attr); modal_document.appendChild(modal_content);
+
+            const modal_header_attr = { class: 'modal-header' };
+            var modal_header = document.createElement("div");
+            setAttributes(modal_header, modal_header_attr); modal_content.appendChild(modal_header);
+            modal_header.innerHTML = "<h5 class='modal-title' id='exampleModalLongTitle'>Create New User</h5><button type='button' class='close' data-dismiss='modal' aria-label='Close'><span aria-hidden='true'>&times;</span></button>";
+
+            // body
+            const modal_body_attr = { class: 'modal-body' };
+            var modal_body = document.createElement("div");
+            setAttributes(modal_body, modal_body_attr); modal_content.appendChild(modal_body);
+
+            const modal_card_attr = { class: 'card' };
+            var modal_card = document.createElement("div");
+            setAttributes(modal_card, modal_card_attr); modal_body.appendChild(modal_card);
+
+            const modal_cardbody_attr = { class: 'card-body' };
+            var modal_cardbody = document.createElement("div");
+            setAttributes(modal_cardbody, modal_cardbody_attr); modal_card.appendChild(modal_cardbody);
+
+            // Nanti di buat edittext di sini
+             modal_cardbody.innerHTML += CreateEditeTextModal('text', 'txtuserid', 'UserId');
+             modal_cardbody.innerHTML += CreateEditeTextModal('text', 'txtusername', 'UserName');
+             modal_cardbody.innerHTML += CreateEditeTextModal('text', 'txtorg', 'Org');
+             modal_cardbody.innerHTML += CreateEditeTextModal('password', 'txtuserpass1', 'Password');
+             modal_cardbody.innerHTML += CreateEditeTextModal('password', 'txtuserpass2', 'Password Konfirm');
+             modal_cardbody.innerHTML += CreateSelect('Role', 'txtrole', 'select2D');
+             modal_cardbody.innerHTML += CreateSelect('Active', 'txtactive', 'select2D');
+             modal_cardbody.innerHTML += CreateEditeTextModal('password', 'txttoken', 'Token');
+            const modal_footer_attr = { class: 'modal-footer' };
+            var modal_footer = document.createElement("div");
+            setAttributes(modal_footer, modal_footer_attr); modal_content.appendChild(modal_footer);
+
+
+            //<button type="button" class="btn btn-sec" data-dismiss="modal">Close</button>
+            const modal_btnclose_attr = { class: 'btn btn-danger', 'data-dismiss': 'modal', value: 'Close', type: 'button'  };
+            var modal_btnclose = document.createElement("button");
+            modal_btnclose.innerHTML = 'Close';
+            setAttributes(modal_btnclose, modal_btnclose_attr); modal_footer.appendChild(modal_btnclose);
+
+            const modal_btnsev_attr = { class: 'btn btn-primary', value: 'Save',type:'button',id:'btnAddNewUser' };
+            var modal_btnsev = document.createElement("button");
+            modal_btnsev.innerHTML = 'Save';
+            setAttributes(modal_btnsev, modal_btnsev_attr); modal_footer.appendChild(modal_btnsev);
+
+            
+
+            modal_btnsev.onclick = () => {
+                var txtuserid = document.getElementById("txtuserid");
+                var txtusername = document.getElementById("txtusername");
+                var txtorg = document.getElementById("txtorg");
+                var txtuserpass1 = document.getElementById("txtuserpass1");
+                var txtuserpass2 = document.getElementById("txtuserpass2");
+                var txtrole = document.getElementById("txtrole");
+                var txtactive = document.getElementById("txtactive");
+                var txttoken = document.getElementById("txttoken");
+
+                if (!txtuserid.value.trim()) { CreateErrorPublic("txtuserid", "This Empty!"); return false; }
+                if (!txtusername.value.trim()) { CreateErrorPublic("txtusername", "This Empty!"); return false; }
+                if (!txtuserpass1.value.trim()) { CreateErrorPublic("txtuserpass1", "This Empty!"); return false; }
+                if (!txtuserpass2.value.trim()) { CreateErrorPublic("txtuserpass2", "This Empty!"); return false; }
+                if (!txtrole.value.trim()) { CreateErrorPublic("txtrole", "This Empty!"); return false; }
+                if (!txtactive.value.trim()) { CreateErrorPublic("txtactive", "This Empty!"); return false; }
+                if (!txttoken.value.trim()) { CreateErrorPublic("txttoken", "This Empty!"); return false; }
+                if (!txtorg.value.trim()) { CreateErrorPublic("txtorg", "This Empty!"); return false; }
+
+                if (txtuserpass1.value != txtuserpass2.value) {
+                    CreateErrorPublic("txtuserpass2", "This Not Equals");
+                    return false;
+                }
+                
+                var data = {
+                    Id:0,
+                    UserId: $("#txtuserid").val(),
+                    UserName: $("#txtusername").val(),
+                    UserPass: $("#txtuserpass1").val(),
+                    UserRolesId: $("#txtrole").val(),
+                    Active: $("#txtactive").val(),
+                    UserCreated: GetDateToday(),
+                    UserUpdated: GetDateToday(),
+                    Token: $("#txttoken").val(),
+                    entry: GetDateToday,
+                    org: $("#txtorg").val()
+                }
+                //console.log(JSON.stringify(data));
+
+                BtnLoading($("#btnAddNewUser"));
+                 $.ajax({
+                    url: '@Url.Action("AddlUser", "User", new { Area = "Maintenance" })',
+                    type: 'POST',
+                    data: JSON.stringify(data),
+                    contentType: "application/json; charset=utf-8",
+                    success: function (x, textStatus, jQxhr) {
+                         BtnReset($("#btnAddNewUser"));
+                         if (x.status === 'error') {
+                             CreateErrorPublic("txtuserid", x.msg);
+                             return false;
+                         } else {
+                             $("#mastercreate").modal('hide');
+                             tbluser_ = Refresh_table_User();
+                         }
+                    },
+                     error: function (jqXhr, textStatus, errorThrown) {
+                        BtnReset($("#btnMAsterSave"));
+                        console.log(errorThrown);
+                    }
+                });
+            }
+
+            document.getElementById("partialview").innerHTML = "&nbsp;";
+            document.getElementById("partialview").appendChild(modal_add);
+            $("#mastercreate").modal('show');
+
+             $("#mastercreate").on('shown.bs.modal', function () {
+                 HidePass("txtuserpass1");
+                 HidePass("txtuserpass2");
+                 HidePass("txttoken");
+
+                 $("#txtuserid").change(function () {
+                     let str = document.getElementById("txtuserid").value.trim().replace(" ", "");
+                     var S1 = "";
+                     if (str.indexOf(" ") > -1) {
+                         var arr = str.split(" ");
+                         for (var i = 0; i < arr.length; i++) {
+                             var onetext = arr[i];
+                             S1 += onetext;
+                         }
+                     }
+
+                     if ($.trim(S1).length > 0) {
+                         $("#txtuserid").val(S1);
+                     } else {
+                         $("#txtuserid").val(str);
+                     }
+                 })
+
+                $.ajax({
+                   url: '@Url.Action("GetRoleList", "User", new { Area = "Maintenance" })',
+                   type: 'POST',
+                   contentType: "application/json; charset=utf-8",
+                    success: function (x, textStatus, jQxhr) {
+                        if (x.status === "success") {
+                            $("#txtrole").empty();
+                            $.each(x.role, function (i, item) {
+                                $("#txtrole").append('<option value="' + item.RoleId + '"> ' + item.RoleName + '</option>');
+                            });
+
+                            $("#txttoken").val(x.token);
+
+                            $("#txtactive").empty();
+                            $("#txtactive").append('<option value="' + "true" + '"> ' + "True" + '</option>');
+                            $("#txtactive").append('<option value="' + "false" + '"> ' + "False" + '</option>');
+
+                            $("#txtactive").select2({
+                                width: "100%",
+                                theme: "classic"
+                            });
+
+                            $("#txtrole").select2({
+                                width: "100%",
+                                theme: "classic",
+                                multiple: true,
+                                tags: true
+                           });
+                       }
+                    },
+                     error: function (jqXhr, textStatus, errorThrown) {
+                        console.log(errorThrown);
+                    }
+                });
+
+            });
+
+        }
+    </script>
+}

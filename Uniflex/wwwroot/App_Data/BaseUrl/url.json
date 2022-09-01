@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "nama": "SaveBookingH2h",
+    "kode": "575c8ae3-a185-457a-a6f8-2ce8233ec4ee",
+    "url": "https://nlehub.kemenkeu.go.id/nlesp2/v1/sp2/Booking/SaveBooking",
+    "status": true,
+    "created": "2022-07-30T00:00:00",
+    "update": "2022-07-30T00:00:00"
+  },
+  {
+    "id": 2,
+    "nama": "nle2",
+    "kode": "xxxxxxxxx api xxxxxxxxx",
+    "url": "https://nlehub.kemenkeu.go.id/nlesp2/v1/sp2/Booking/SaveBooking",
+    "status": true,
+    "created": "2022-07-30T00:00:00",
+    "update": "2022-07-30T00:00:00"
+  }
+]
